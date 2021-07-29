@@ -1359,12 +1359,28 @@ setGeneric(
             }
 
             ## Regress out irrelevant items, if specified ##
+
+            ###################################################
+            ## old: retired 2021-07-29 ##
+
+            # SampleList[[i]] <- Seurat::ScaleData(
+            #     SampleList[[i]],
+            #     verbose = FALSE,
+            #     vars.to.regress = vars.to.regress,
+            #     features = row.names(SampleList[[i]])
+            # )
+
+            ##
+            ###################################################
+
             SampleList[[i]] <- Seurat::ScaleData(
                 SampleList[[i]],
                 verbose = FALSE,
-                vars.to.regress = vars.to.regress,
-                features = row.names(SampleList[[i]])
+                vars.to.regress = vars.to.regress
             )
+
+            ## Change SB 29/07/21. Scale data ran very slow when regressing out cell cycle genes for larger datasets. As scale data is only used to create UMAP and PCA plots, the most variable features should be sufficient.
+
 
         }
 
