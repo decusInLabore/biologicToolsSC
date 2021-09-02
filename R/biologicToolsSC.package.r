@@ -747,7 +747,7 @@ setGeneric(
 
             NewChnk <- paste0(
                 paste(rep("#", tocSubLevel), collapse=""), " ", tag,
-                "\n```{r SL_UMAP_",
+                "\n```{r SLC_UMAP_",
                 tag,", results='asis', echo=F, eval=TRUE, warning=FALSE, fig.cap='",
                 figLegend,"'}\n",
                 "\n",
@@ -2044,7 +2044,7 @@ setGeneric(
         tocSubLevel = 4,
         s.genes = NULL,
         g2m.genes = NULL,
-        cellCycleRefFile = 'paste0(hpc.mount, "Projects/reference_data/cell_cycle_vignette_files/nestorawa_forcellcycle_expressionMatrix.txt")'
+        cellCycleRefFile = NULL #'paste0(hpc.mount, "Projects/reference_data/cell_cycle_vignette_files/nestorawa_forcellcycle_expressionMatrix.txt")'
 
     ) {
         ###############################################################################
@@ -2233,7 +2233,7 @@ setGeneric(
         dotsize = 0.5,
         s.genes = NULL,
         g2m.genes = NULL,
-        cellCycleRefFile = paste0(hpc.mount, "Projects/reference_data/cell_cycle_vignette_files/nestorawa_forcellcycle_expressionMatrix.txt")
+        cellCycleRefFile = NULL #paste0(hpc.mount, "Projects/reference_data/cell_cycle_vignette_files/nestorawa_forcellcycle_expressionMatrix.txt")
     ) {
         ###############################################################################
         ## Make plots                                                                ##
