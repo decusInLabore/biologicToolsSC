@@ -83,6 +83,7 @@ createXLSXoutput <- function(
 #' @description Method description
 #' @param agree TBD
 #' @keywords TBD
+#' @import Matrix
 #' @export
 #'
 setGeneric(
@@ -95,7 +96,7 @@ setGeneric(
         dotsize = 0.5
     ) {
 
-
+        library(Matrix)
 
         figureCreated <- FALSE
         sampleNames <- names(obj@sampleDetailList)
@@ -124,6 +125,7 @@ setGeneric(
 
                     CellRanger <- rep("Excl", length(cellID))
                     CellRanger[cellID %in% colnames(filtSampleList[[sampleNames[i]]])] <- "Incl"
+
 
                     UMI_count <- colSums(rawSampleList[[sampleNames[i]]])
 
