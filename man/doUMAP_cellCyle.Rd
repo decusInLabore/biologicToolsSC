@@ -13,8 +13,7 @@ doUMAP_cellCyle(
   dotsize = 0.5,
   s.genes = NULL,
   g2m.genes = NULL,
-  cellCycleRefFile = paste0(hpc.mount,
-    "Projects/reference_data/cell_cycle_vignette_files/nestorawa_forcellcycle_expressionMatrix.txt")
+  cellCycleRefFile = NULL
 )
 }
 \arguments{
