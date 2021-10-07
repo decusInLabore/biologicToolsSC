@@ -1679,17 +1679,28 @@ setGeneric(
             library(mixtools)
             x <- as.vector( dfHist$percent_mt)
             dfHist[["x"]] <- x
-            fit <- normalmixEM(x, k = 2) #try to fit two Gaussians
+            fitPossible <- tryCatch({fit <- normalmixEM(x, k = 2); fitPossible = T},
+            error=function(cond) {
+                message(paste("No fit possible"))
 
-            dfHist[["temp1"]] <- fit$lambda[1]*dnorm(x,fit$mu[1],fit$sigma[1])
-            dfHist[["temp2"]] <- fit$lambda[2]*dnorm(x,fit$mu[2],fit$sigma[2])
+            # Choose a return value in case of error
+            fitPossible <- FALSE
+            return(fitPossible)
+            })
 
-            # https://labrtorian.com/tag/mixture-model/
+                            #try to fit two Gaussians
 
-            ## Calculate Mean for distribution 1
+            if (fitPossible){
+                dfHist[["temp1"]] <- fit$lambda[1]*dnorm(x,fit$mu[1],fit$sigma[1])
+                dfHist[["temp2"]] <- fit$lambda[2]*dnorm(x,fit$mu[2],fit$sigma[2])
 
-            x1meanLine <- fit$mu[1]
-            x2meanLine <- fit$mu[2]
+                # https://labrtorian.com/tag/mixture-model/
+
+                ## Calculate Mean for distribution 1
+
+                x1meanLine <- fit$mu[1]
+                x2meanLine <- fit$mu[2]
+            }
 
             ## Find histogram max count ##
             pTest <- ggplot2::ggplot(data=dfHist,  ggplot2::aes(x=percent_mt, fill = included)
@@ -1697,8 +1708,11 @@ setGeneric(
             )
             dfT <- ggplot2::ggplot_build(pTest)$data[[1]]
             yMax <- max(dfT$count)
+
+            if (fitPossible){
             dMax1 <- max( fit$lambda[1]*dnorm(x,fit$mu[1],fit$sigma[1]))
             dMax2 <- max( fit$lambda[2]*dnorm(x,fit$mu[2],fit$sigma[2]))
+
             if (dMax1 > dMax2){
                 dMax <- dMax1
                 sF <- yMax/dMax
@@ -1712,6 +1726,7 @@ setGeneric(
                 dfHist[["fitVec1"]] <- sF*fit$lambda[2]*dnorm(x,fit$mu[2],fit$sigma[2])
                 dfHist[["x"]] <- fit$x
             }
+            }
 
             dfHist <- dfHist[order(dfHist$x, decreasing = F),]
 
@@ -1723,12 +1738,18 @@ setGeneric(
 
 
             plotListRF[[tag]] <- ggplot2::ggplot(data=dfHist,  ggplot2::aes(x=percent_mt, fill = included)
-            ) + ggplot2::geom_vline( xintercept = c(x1meanLine, x2meanLine), col="grey", linetype = "dashed"
+
             ) + ggplot2::geom_histogram(binwidth=0.3, alpha = 0.5
             ) + ggplot2::geom_vline( xintercept = obj@sampleDetailList[[sampleNames[i]]]$singleCellSeuratMtCutoff, col="red", linetype = "dashed"
-            ) + ggplot2::scale_fill_manual(values=colVec) + ggplot2::geom_point( ggplot2::aes(x=x, y=fitVec1), color = "#009900", size = 0.1
-            ) + ggplot2::geom_point( ggplot2::aes(x=x, y=fitVec2), color = "#FF0000", size = 0.1
-            ) +  ggplot2::theme(
+            )
+
+            if (fitPossible){
+                plotListRF[[tag]] <- plotListRF[[tag]] + ggplot2::geom_point( ggplot2::aes(x=x, y=fitVec2), color = "#FF0000", size = 0.1
+                ) + ggplot2::geom_vline( xintercept = c(x1meanLine, x2meanLine), col="grey", linetype = "dashed"
+            )
+            }
+
+            plotListRF[[tag]] <- plotListRF[[tag]] +  ggplot2::theme(
                 axis.text.y   =  ggplot2::element_text(size=8),
                 axis.text.x   =  ggplot2::element_text(size=8),
                 axis.title.y  =  ggplot2::element_text(size=8),
