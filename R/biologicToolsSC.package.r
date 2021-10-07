@@ -1726,9 +1726,11 @@ setGeneric(
                 dfHist[["fitVec1"]] <- sF*fit$lambda[2]*dnorm(x,fit$mu[2],fit$sigma[2])
                 dfHist[["x"]] <- fit$x
             }
-            }
 
             dfHist <- dfHist[order(dfHist$x, decreasing = F),]
+            }
+
+
 
             colVec <- unique(sort(SampleList[[sampleNames[i]]]@meta.data$included))
             library(RColorBrewer)
