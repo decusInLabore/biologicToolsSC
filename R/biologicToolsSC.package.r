@@ -1599,7 +1599,7 @@ setGeneric(
         nPCs <- obj@sampleDetailList[[i]]$singleCellSeuratNpcs4PCA
         if (ncol(SampleList[[i]]) < 250){
             nPCs <- 10
-        } else if (ncol(SampleList[[i]]) < 10){
+        } else if (ncol(SampleList[[i]]) < 50){
             nPCs <- 2
         }
 
