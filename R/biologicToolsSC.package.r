@@ -1278,6 +1278,8 @@ setGeneric(
                 mtSel <- "^mt-"
             } else if (obj@parameterList$species == "gallus_gallus") {
                 mtSel <- "^MT-"
+            } else if (obj@parameterList$species == "drosophila_melanogaster") {
+                mtSel <- "^mt::"
             } else {
                 stop("Mitochondrial gene identifier not specified for this species in function createNormSampleList().")
             }
@@ -1529,6 +1531,8 @@ setGeneric(
             mtSel <- "^mt-"
         } else if (obj@parameterList$species == "gallus_gallus") {
             mtSel <- "^MT-"
+        } else if (obj@parameterList$species == "drosophila_melanogaster") {
+            mtSel <- "^mt::"
         } else {
             stop("mtSel not defined for this species in createSampleListQC")
             mtSel <- "^MitoGene-"
@@ -1654,6 +1658,8 @@ setGeneric(
         mtSel <- "^MT-"
     } else if (obj@parameterList$species == "danio_rerio") {
         mtSel <- "^mt-"
+    } else if (obj@parameterList$species == "drosophila_melanogaster") {
+        mtSel <- "^mt::"
     } else {
         mtSel <- "^MitoGene-"
     }
