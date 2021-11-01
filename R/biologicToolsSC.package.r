@@ -1964,7 +1964,11 @@ setGeneric(
         addCorCatsToLabDb = TRUE
     ) {
 
-
+        if (obj@parameterList$geneIDcolumn != "mgi_symbol" & obj@parameterList$geneIDcolumn != "hgnc_symbol") {
+            queryGS <- "hgnc_symbol"
+        } else {
+            queryGS <- obj@parameterList$geneIDcolumn
+        }
 
 
         dfGeneralMarkers <- obj@dataTableList$dfGeneralMarkers
@@ -1978,15 +1982,25 @@ setGeneric(
             dfTemp <- dfGeneralMarkers[dfGeneralMarkers$cluster == clusterVec[i], ]
             geneVec <- sort(unique(dfTemp$gene))
 
-            head <- paste0(obj@parameterList$project_id, "_Markers_Cluster_", clusterVec[i])
-            cat.id <- paste0("temp_",obj@parameterList$project_id, "_cluster_marker_", clusterVec[i])
-            head <- append(head, paste0("https:\\/\\/biologic.crick.ac.uk\\/", obj@parameterList$project_id, "\\/category-view/", cat.id))
+            ## Translate to human in non-mouse non-human species ##
+            if (obj@parameterList$geneIDcolumn != "mgi_symbol" & obj@parameterList$geneIDcolumn != "hgnc_symbol") {
+                dfTranslate <- unique(obj@dfGeneAnnotation[,c(obj@parameterList$geneIDcolumn, "hgnc_symbol")])
+                dfTranslate <- dfTranslate[dfTranslate$hgnc_symbol != "", ]
+                dfTranslate <- dfTranslate[dfTranslate[,obj@parameterList$geneIDcolumn] %in% geneVec, ]
+                geneVec <- unique(dfTranslate$hgnc_symbol)
+            }
 
-            gmt.vec <- append(head, geneVec)
-            gmt.list[[cat.id]] <- gmt.vec
+            if (length(geneVec) > 0){
+                head <- paste0(obj@parameterList$project_id, "_Markers_Cluster_", clusterVec[i])
+                cat.id <- paste0("temp_",obj@parameterList$project_id, "_cluster_marker_", clusterVec[i])
+                head <- append(head, paste0("https:\\/\\/biologic.crick.ac.uk\\/", obj@parameterList$project_id, "\\/category-view/", cat.id))
 
-            if (max.length < length(gmt.vec)){
-                max.length <- length(gmt.vec)
+                gmt.vec <- append(head, geneVec)
+                gmt.list[[cat.id]] <- gmt.vec
+
+                if (max.length < length(gmt.vec)){
+                    max.length <- length(gmt.vec)
+                }
             }
         }
 
@@ -2044,7 +2058,7 @@ setGeneric(
                 cat_type = paste0("temp_cluster_marker_", obj@parameterList$project_id),
                 data_source = "DGE Cluster Marker Genes",
                 keep.gene.values = FALSE,
-                gene.id = obj@parameterList$geneIDcolumn,
+                gene.id = queryGS,
                 create.new.table = FALSE,
                 mm.hs.conversion.file =  paste0(hpc.mount, "Projects/reference_data/20160303.homologene.data.txt")
             )
