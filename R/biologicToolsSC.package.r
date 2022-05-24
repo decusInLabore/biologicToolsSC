@@ -1616,7 +1616,9 @@ setGeneric(
         SampleList[[i]] <- Seurat::RunTSNE(SampleList[[i]], reduction = "pca", dims = 1:nPCs, perplexity=nPCs)
 
         ## Do UMAP ##
-        SampleList[[i]] <- Seurat::RunUMAP(SampleList[[i]], reduction = "pca", dims = 1:nPCs)
+        if (ncol(SampleList[[i]]) >= 50){
+            SampleList[[i]] <- Seurat::RunUMAP(SampleList[[i]], reduction = "pca", dims = 1:nPCs)
+        }
 
         ## Do clustering ##
         SampleList[[i]] <- Seurat::FindNeighbors(SampleList[[i]], reduction = "pca", dims = 1:nPCs)
