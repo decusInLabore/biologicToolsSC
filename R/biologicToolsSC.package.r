@@ -1613,7 +1613,7 @@ setGeneric(
             verbose = FALSE
         )
         ## Do tSNE ##
-        SampleList[[i]] <- Seurat::RunTSNE(SampleList[[i]], reduction = "pca", dims = 1:nPCs, perplexity=nPCs)
+        SampleList[[i]] <- Seurat::RunTSNE(SampleList[[i]], reduction = "pca", dims = 1:nPCs, perplexity=nPCs, check_duplicates = FALSE)
 
         ## Do UMAP ##
         if (ncol(SampleList[[i]]) >= 50){
