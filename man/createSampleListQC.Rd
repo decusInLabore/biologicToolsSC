@@ -10,7 +10,8 @@ createSampleListQC(
   vars.to.regress = NULL,
   s.genes = NULL,
   g2m.genes = NULL,
-  annotateCellCyclePhase = TRUE
+  annotateCellCyclePhase = TRUE,
+  feature_type = "Gene Expression"
 )
 }
 \arguments{

@@ -11,7 +11,8 @@ createNormSampleList(
   g2m.genes = NULL,
   s.genes = NULL,
   annotateCellCyclePhase = TRUE,
-  integrationReduction = "cca"
+  integrationReduction = "cca",
+  feature_type = "Gene Expression"
 )
 }
 \arguments{
