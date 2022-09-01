@@ -1157,7 +1157,8 @@ setGeneric(
         g2m.genes = NULL,
         s.genes = NULL,
         annotateCellCyclePhase = TRUE,
-        integrationReduction = "cca" #options = "rpca" # options: c("cca", "rpca", "rlsi")
+        integrationReduction = "cca", #options = "rpca" # options: c("cca", "rpca", "rlsi")
+        feature_type = "Gene Expression"
         #vars to regress cell cycle options #c("S_Score", "G2M_Score) or
         #"CC_Difference"
         #figureCount = 1,
@@ -1229,7 +1230,14 @@ setGeneric(
                     Seurat::Read10X(data.dir = dataDir, gene.column = gene.column)
                 )
 
+                ## Cellranger multi will create a list, rather than a matrix
+                if (is.list(fullMat)){
 
+                    pos <- grep(feature_type, names(fullMat))
+                    if ( length( pos ) == 1){
+                        fullMat <- fullMat[[pos]]
+                    }
+                }
 
             }
 
@@ -1418,7 +1426,8 @@ setGeneric(
         vars.to.regress = NULL,
         s.genes = NULL,
         g2m.genes = NULL,
-        annotateCellCyclePhase = TRUE
+        annotateCellCyclePhase = TRUE,
+        feature_type = "Gene Expression"
         #figureCount = 1,
         #VersionPdfExt = ".pdf",
         #tocSubLevel = 4
@@ -1483,6 +1492,15 @@ setGeneric(
                 "fullMat", #names(obj@parameterList[[obj@parameterList$inputMode]])[i],
                 Seurat::Read10X(data.dir = dataDir, gene.column = gene.column)
             )
+
+            ## Cellranger multi will create a list, rather than a matrix
+            if (is.list(fullMat)){
+
+                pos <- grep(feature_type, names(fullMat))
+                if ( length( pos ) == 1){
+                    fullMat <- fullMat[[pos]]
+                }
+            }
 
         }
 
@@ -1629,6 +1647,7 @@ setGeneric(
         SampleList[[i]]@meta.data[SampleList[[i]]@meta.data$percent_mt > obj@sampleDetailList[[i]]$singleCellSeuratMtCutoff  ,"selected"] <- ""
         SampleList[[i]]@meta.data[SampleList[[i]]@meta.data$nFeature_RNA > obj@sampleDetailList[[i]]$SeuratNrnaMaxFeatures  ,"selected"] <- ""
         SampleList[[i]]@meta.data[SampleList[[i]]@meta.data$nFeature_RNA < obj@sampleDetailList[[i]]$SeuratNrnaMinFeatures  ,"selected"] <- ""
+        print(paste0(i, "th sample, ", sampleID, " done."))
     }
     return(SampleList)
 
